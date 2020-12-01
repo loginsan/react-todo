@@ -4,27 +4,30 @@ import './task.css';
 const Task = ( {type, descr, created} ) => {
     
     let classNames = '';
-    let EditForm = '';
+    let EditForm = () => {return null};
+    const changeText = function(evt) {
+        console.log("Edit text…");
+    }
     if (type === "completed") {
-        classNames = ` class="completed"`;
+        classNames = "completed";
     }
     if (type === "editing") {
-        classNames = ` class="editing"`;
+        classNames = "editing";
         EditForm = () => {
-            return <input type="text" class="edit" value="Editing task" />;
+            return <input type="text" className="edit" value="Editing task" onChange={changeText} />;
         }
     }
 
     return (
-        <li{classNames}>
-            <div class="view">
-              <input class="toggle" type="checkbox">
+        <li className={classNames}>
+            <div className="view">
+              <input className="toggle" type="checkbox" />
               <label>
-                <span class="description">{descr}</span>
-                <span class="created">{created}</span>
+                <span className="description">{descr}</span>
+                <span className="created">{created}</span>
               </label>
-              <button class="icon icon-edit"></button>
-              <button class="icon icon-destroy"></button>
+              <button className="icon icon-edit"></button>
+              <button className="icon icon-destroy"></button>
             </div>
             <EditForm />
         </li>

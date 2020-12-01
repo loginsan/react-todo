@@ -2,9 +2,9 @@ import React from 'react';
 import './new-task-form.css';
 
 const NewTaskForm = ( {label, autofocus = true} ) => {
-    const autofocusAttr = {autofocus} ? "autofocus" : "";
+    //const autofocusAttr = autofocus ? "autofocus" : "";
     return (
-        <input class="new-todo" placeholder={label} {autofocusAttr} />
+        <input className="new-todo" placeholder={label} autoFocus={autofocus} />
     );
 }
 

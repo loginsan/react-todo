@@ -4,34 +4,21 @@ import './index.css';
 
 import NewTaskForm from './components/new-task-form';
 import Footer from './components/footer';
-
+import TaskList from './components/task-list';
 
 const App = () => {
   return (
-<html lang="en" data-framework="es6">
-  <head>
-    <meta charset="utf-8">
-    <title>React • TodoMVC</title>
-  </head>
-  <body>
-    <section class="todoapp">
-      <header class="header">
+    <section className="todoapp">
+      <header className="header">
         <h1>todos</h1>
-        <NewTaskForm label="What needs to be done?" autofocus="true" />
+        <NewTaskForm label="What needs to be done?" autofocus={true} />
       </header>
-      <section class="main">
+      <section className="main">
         <TaskList />
         <Footer />
       </section>
     </section>
-  </body>
-</html>
   );
-}
+};
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+ReactDOM.render(<App />, document.getElementById('root'));
