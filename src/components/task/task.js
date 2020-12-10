@@ -4,7 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 // {"id": "key1", "level": "completed", "description": "Completed task", "created": 1607029021000}
 import './task.css';
 
-class Task extends Component {
+export default class Task extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -75,5 +75,3 @@ class Task extends Component {
         return TaskBody;
     }
 }
-
-export default Task;
