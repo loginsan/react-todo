@@ -7,11 +7,12 @@ import './task.css';
 export default class Task extends Component {
     constructor(props) {
         super(props);
+        let {id, level, description, created} = this.props;
         this.state = {
-            id: this.props.id,
-            level: this.props.level,
-            description: this.props.description,
-            created: new Date(this.props.created)
+            id: id,
+            level: level,
+            description: description,
+            created: new Date(created)
         };
     }
 
@@ -34,44 +35,30 @@ export default class Task extends Component {
     }*/
 
     render() {
-        const TaskView = (
-            <div className="view">
-                <input className="toggle" type="checkbox" />
-                <label>
-                    <span className="description">{this.state.description}</span>
-                    <span className="created">{formatDistanceToNow(this.state.created, { addSuffix: true, includeSeconds: true })}</span>
-                </label>
-                <button className="icon icon-edit"></button>
-                <button className="icon icon-destroy"></button>
-            </div>
-        );
+        let {id, onDelete, onToggleDone} = this.props;
+        let {level, description, created} = this.state;
+
         const changeText = function(evt) {
             console.log("Edit text…");
         }
-        let TaskBody = '';
+        let classNames = (level === "completed")? "completed" : ((level === "editing")? "editing" : "");
+        let editField = (level === "editing")? (
+            <input type="text" className="edit" value={description} onChange={changeText} tabIndex="1" />
+        ) : null;
 
-        if (this.state.level === "active") {
-            TaskBody = (
-                <li key={this.state.id}>
-                    { TaskView }
-                </li>
-            );
-        }
-        if (this.state.level === "completed") {
-            TaskBody = (
-                <li key={this.state.id} className="completed">
-                    { TaskView }
-                </li>
-            );
-        }
-        if (this.state.level === "editing") {
-             TaskBody = (
-                <li key={this.state.id} className="editing">
-                    { TaskView }
-                    <input type="text" className="edit" value={this.state.description} onChange={changeText} />
-                </li>
-            );
-        }
-        return TaskBody;
+        return (
+            <li id={id} className={classNames}>
+                <div className="view">
+                    <input className="toggle" type="checkbox" onChange={() => onToggleDone(id)} checked={level === "completed"? "checked" : ""} tabIndex="1" />
+                    <label>
+                        <span className="description">{description}</span>
+                        <span className="created">{formatDistanceToNow(created, { addSuffix: true, includeSeconds: true })}</span>
+                    </label>
+                    <button className="icon icon-edit" tabIndex="1"></button>
+                    <button className="icon icon-destroy" onClick={() => onDelete(id)} tabIndex="1"></button>
+                </div>
+                { editField }
+            </li>
+        );
     }
 }
