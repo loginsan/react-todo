@@ -4,27 +4,24 @@ import NewTaskForm from '../new-task-form';
 import Footer from '../footer';
 import TaskList from '../task-list';
 
-/*{"id": "key1", "level": "completed", "description": "Completed task", "created": 1607029021000},
-{"id": "key2", "level": "editing", "description": "Editing task", "created": 1607029201000},
-{"id": "key3", "level": "active", "description": "Active task", "created": 1607029920447}*/
-
 export default class App extends Component {
 
   maxID = 1;
 
   state = {
     todoData : [
-        {id: "key1", level: "completed", description: "Completed task", created: 1607029021000},
-        {id: "key2", level: "editing", description: "Editing task", created: 1607029201000},
-        {id: "key3", level: "active", description: "Active task", created: 1607029920447}
+        {id: "key1", done: true, edit: false, description: "Completed task", created: 1607029021000},
+        {id: "key2", done: false, edit: true, description: "Editing task", created: 1607029201000},
+        {id: "key3", done: false, edit: false, description: "Active task", created: 1607029920447}
     ]
   };
 
-  createTodoObj = (text, level = "active") => {
+  createTodoObj = (text, done = false) => {
     this.maxID += 1;
     return {
       id: "key" + this.maxID,
-      level: level,
+      done: done,
+      edit: false,
       description: text,
       created: Date.now() - 1000 * 60 * 7
     }
@@ -35,7 +32,8 @@ export default class App extends Component {
       const idx = todoData.findIndex((el) => el.id === id);
       const updateTodo = {
         id: todoData[idx].id,
-        level: todoData[idx].level === "completed"? "active" : "completed",
+        done: !todoData[idx].done,
+        edit: false,
         description: todoData[idx].description,
         created: todoData[idx].created
       };

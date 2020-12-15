@@ -10,7 +10,7 @@ export default class TaskList extends Component {
       return (
           <ul className="todo-list">
           { items.map( el => (
-              <Task key={el.id} id={el.id} level={el.level}
+              <Task key={el.id} id={el.id} done={el.done} edit={el.edit}
                   description={el.description}
                   created={el.created}
                   onDelete={onDelete} onToggleDone={onToggleDone} />

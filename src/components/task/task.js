@@ -4,21 +4,25 @@ import './task.css';
 
 export default class Task extends Component {
 
+    taskText = this.props.description;
+
+    changeText = (evt) => {
+        this.taskText = evt.target.value;
+    };
+
     render() {
-        let {id, level, description, created, onDelete, onToggleDone} = this.props;
+        let {id, done, edit, description, created, onDelete, onToggleDone} = this.props;
 
-        const changeText = function(evt) {
-            console.log("Edit text…");
-        }
-        let classNames = (level === "completed")? "completed" : ((level === "editing")? "editing" : "");
-        let editField = (level === "editing")? (
-            <input type="text" className="edit" value={description} onChange={changeText} tabIndex="1" />
+        
+        let classNames = done? "completed" : (edit? "editing" : "");
+        let editField = edit? (
+            <input type="text" className="edit" value={this.taskText} onChange={this.changeText} tabIndex="1" />
         ) : null;
-        let checkedToggle = (level === "completed")? "checked" : "";
+        let checkedToggle = done? "checked" : "";
 
-        console.log('render todo', id, level, description);
+        console.log('render todo', id, done, description);
         return (
-            <li id={id} className={classNames}>
+            <li className={classNames}>
                 <div className="view">
                     <input className="toggle" type="checkbox" onChange={() => onToggleDone(id)} tabIndex="1" checked={checkedToggle} />
                     <label>
