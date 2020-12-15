@@ -1,42 +1,11 @@
 import React, { Component } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-// formatDistanceToNow(new Date(2014, 6, 2), { addSuffix: true, locale: "ru-RU" })
-// {"id": "key1", "level": "completed", "description": "Completed task", "created": 1607029021000}
 import './task.css';
 
 export default class Task extends Component {
-    constructor(props) {
-        super(props);
-        let {id, level, description, created} = this.props;
-        this.state = {
-            id: id,
-            level: level,
-            description: description,
-            created: new Date(created)
-        };
-    }
-
-    /*componentDidMount() {
-        this.timerID = setInterval(
-            () => this.tick(),
-            1000
-        );
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.timerID);
-    }
-
-    tick() {
-        this.setState({
-            created: formatDistanceToNow(this.state.created, { addSuffix: true, includeSeconds: true })
-            //created: this.state.created + 1000
-        });
-    }*/
 
     render() {
-        let {id, onDelete, onToggleDone} = this.props;
-        let {level, description, created} = this.state;
+        let {id, level, description, created, onDelete, onToggleDone} = this.props;
 
         const changeText = function(evt) {
             console.log("Edit text…");
@@ -45,11 +14,13 @@ export default class Task extends Component {
         let editField = (level === "editing")? (
             <input type="text" className="edit" value={description} onChange={changeText} tabIndex="1" />
         ) : null;
+        let checkedToggle = (level === "completed")? "checked" : "";
 
+        console.log('render todo', id, level, description);
         return (
             <li id={id} className={classNames}>
                 <div className="view">
-                    <input className="toggle" type="checkbox" onChange={() => onToggleDone(id)} checked={level === "completed"? "checked" : ""} tabIndex="1" />
+                    <input className="toggle" type="checkbox" onChange={() => onToggleDone(id)} tabIndex="1" checked={checkedToggle} />
                     <label>
                         <span className="description">{description}</span>
                         <span className="created">{formatDistanceToNow(created, { addSuffix: true, includeSeconds: true })}</span>
