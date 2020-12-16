@@ -6,17 +6,23 @@ import Task from '../task';
 export default class TaskList extends Component {
 
     render() {
-      const {items, onDelete, onToggleDone} = this.props;
-      return (
-          <ul className="todo-list">
-          { items.map( el => (
-              <Task key={el.id} id={el.id} done={el.done} edit={el.edit}
-                  description={el.description}
-                  created={el.created}
-                  onDelete={onDelete} onToggleDone={onToggleDone} />
-          ) ) }
-          </ul>
-      );
+        const {items, onDelete, onToggleDone} = this.props;
+        return (
+            <ul className="todo-list">
+            { 
+                items.map( el => {
+                    const {id, done, edit, description, created} = el;
+                    return (
+                        <Task key={id} id={id} done={done} edit={edit}
+                            description={description}
+                            created={created}
+                            onDelete={() => onDelete(id)} onToggleDone={() => onToggleDone(id)}
+                        />
+                    );
+                })
+            }
+            </ul>
+        );
     }
 
 };

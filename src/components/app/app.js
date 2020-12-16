@@ -11,6 +11,7 @@ export default class App extends Component {
   state = {
     todoData : [
         {id: "key1", done: true, edit: false, description: "Completed task", created: 1607029021000},
+        {id: "key4", done: true, edit: false, description: "Some test todo", created: 1607029020000},
         {id: "key2", done: false, edit: true, description: "Editing task", created: 1607029201000},
         {id: "key3", done: false, edit: false, description: "Active task", created: 1607029920447}
     ]
@@ -60,6 +61,15 @@ export default class App extends Component {
     });
   };
 
+  clearDone = () => {
+    this.setState( ({todoData}) => {
+      const todoLeft = todoData.filter((el) => el.done === false);
+      return {
+        todoData : todoLeft
+      }
+    });
+  };
+
   render() {
     const {todoData} = this.state;
     console.log('render App');
@@ -71,7 +81,7 @@ export default class App extends Component {
             </header>
             <section className="main">
                 <TaskList items={todoData} onDelete={this.onDelete} onToggleDone={this.onToggleDone} />
-                <Footer />
+                <Footer items={todoData} clearDone={this.clearDone} />
             </section>
         </section>
     )

@@ -16,7 +16,7 @@ export default class Task extends Component {
         
         let classNames = done? "completed" : (edit? "editing" : "");
         let editField = edit? (
-            <input type="text" className="edit" value={this.taskText} onChange={this.changeText} tabIndex="1" />
+            <input type="text" className="edit" onChange={this.changeText} tabIndex="1" />
         ) : null;
         let checkedToggle = done? "checked" : "";
 
