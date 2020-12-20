@@ -24,29 +24,26 @@ export default class App extends Component {
       done: done,
       edit: false,
       description: text,
-      created: Date.now() - 1000 * 60 * 7
+      created: Date.now() - Math.ceil(1000 * 60 * 7 * Math.random())
     }
   };
 
+  toggleProp = (propArr, id, name) => {
+    const idx = propArr.findIndex((el) => el.id === id);
+    const updateTodo =  { ...propArr[idx], [name]: !propArr[idx][name] };
+    return {
+      todoData : [
+        ...propArr.slice(0, idx),
+        updateTodo,
+        ...propArr.slice(idx + 1)
+      ]
+    }
+  }
+
   onToggleDone = (id) => {
-    this.setState( ({todoData}) => {
-      const idx = todoData.findIndex((el) => el.id === id);
-      const updateTodo = {
-        id: todoData[idx].id,
-        done: !todoData[idx].done,
-        edit: false,
-        description: todoData[idx].description,
-        created: todoData[idx].created
-      };
-      console.log('Toggle Done', id, idx, updateTodo);
-      return {
-        todoData : [
-          ...todoData.slice(0, idx),
-          updateTodo,
-          ...todoData.slice(idx + 1)
-        ]
-      }
-    });
+    this.setState( ({todoData}) => 
+      this.toggleProp(todoData, id, "done")
+    )
   };
 
   onDelete = (id) => {
@@ -70,9 +67,25 @@ export default class App extends Component {
     });
   };
 
+  onEditKeyUp = (id, event) => {
+    //console.log('onEditKeyUp', id, event.key)
+    if (event.key === "Enter") {
+      console.log('onEditKeyUp', id);
+      this.setState( ({todoData}) => 
+        this.toggleProp(todoData, id, "edit")
+      )
+    }
+  }
+  onEdit = (id, event) => {
+    console.log('onEdit', id);
+    this.setState( ({todoData}) => 
+      this.toggleProp(todoData, id, "edit")
+    )
+  }
+
   render() {
     const {todoData} = this.state;
-    console.log('render App');
+    //console.log('render App');
     return (
         <section className="todoapp">
             <header className="header">
@@ -80,7 +93,7 @@ export default class App extends Component {
                 <NewTaskForm label="What needs to be done?" autofocus={true} tabIndex="1" />
             </header>
             <section className="main">
-                <TaskList items={todoData} onDelete={this.onDelete} onToggleDone={this.onToggleDone} />
+                <TaskList items={todoData} onDelete={this.onDelete} onToggleDone={this.onToggleDone} onEditKeyUp={this.onEditKeyUp} onEdit={this.onEdit} />
                 <Footer items={todoData} clearDone={this.clearDone} />
             </section>
         </section>
