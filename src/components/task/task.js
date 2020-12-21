@@ -15,8 +15,12 @@ export default class Task extends Component {
         this.setState( {taskEditText: evt.target.value} )
     }
 
+    componentDidUpdate() {
+        //console.log('.');
+    }
+
     render() {
-        const {id, done, edit, description, created, onDelete, onToggleDone, onEditKeyUp, onEdit} = this.props;
+        const {id, done, edit, hidden, description, created, onDelete, onToggleDone, onEditKeyUp, onEdit} = this.props;
 
         let classNames = done? "completed" : "";
         classNames = edit? "editing" : classNames;
@@ -24,6 +28,9 @@ export default class Task extends Component {
             <input type="text" className="edit" onChange={this.changeText} onKeyUp={(event) => onEditKeyUp(id, event)} value={this.state.taskEditText} tabIndex="1" />
         ) : null;
         let checkedToggle = done? "checked" : "";
+        if (hidden) {
+            classNames += " hidden";
+        }
 
         return (
             <li className={classNames}>
