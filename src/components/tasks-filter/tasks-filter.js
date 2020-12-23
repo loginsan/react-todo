@@ -1,8 +1,7 @@
 import React from 'react';
-import './tasks-filter.css';
+import './Tasks-filter.css';
 
-const TasksFilter = (props) => {
-    const {filterList} = props;
+const TasksFilter = ({filterList}) => {
     return (
         <ul className="filters">
             <li>

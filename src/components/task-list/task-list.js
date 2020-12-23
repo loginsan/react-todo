@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import './task-list.css';
-import Task from '../task';
+import './Task-list.css';
+import Task from '../Task';
 
 
 export default class TaskList extends Component {
@@ -10,10 +10,9 @@ export default class TaskList extends Component {
         return (
             <ul className="todo-list">
             { 
-                items.map( el => {
-                    const {id, done, edit, hidden, description, created} = el;
+                items.map( ({id, isDone, isEdit, isHidden, description, created}) => {
                     return (
-                        <Task key={id} id={id} done={done} edit={edit} hidden={hidden}
+                        <Task key={id} id={id} isDone={isDone} isEdit={isEdit} isHidden={isHidden}
                             description={description} created={created}
                             onDelete={() => onDelete(id)} 
                             onToggleDone={() => onToggleDone(id)}

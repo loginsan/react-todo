@@ -1,19 +1,13 @@
 import React, {Component} from 'react';
 
-import NewTaskForm from '../new-task-form';
-import Footer from '../footer';
-import TaskList from '../task-list';
+import NewTaskForm from '../New-task-form';
+import Footer from '../Footer';
+import TaskList from '../Task-list';
 
 export default class App extends Component {
 
-  maxID = 1;
-
   state = {
     todoData : [
-        /*{id: "key1", done: true, edit: false, visible: true, description: "Completed task", created: 1607029021000},
-        {id: "key4", done: true, edit: false, visible: true, description: "Some test todo", created: 1607029020000},
-        {id: "key2", done: false, edit: true, visible: true, description: "Editing task", created: 1607029201000},
-        {id: "key3", done: false, edit: false, visible: true, description: "Active task", created: 1607029920447}*/
         this.createTodoObj("Completed task"),
         this.createTodoObj("Editing task"),
         this.createTodoObj("Active task"),
@@ -21,12 +15,16 @@ export default class App extends Component {
     ]
   };
 
+  setId() {
+    return "key" + (Date.now() - Math.ceil(1000 * 60 * 7 * Math.random()))
+  }
+
   createTodoObj(text) {
     return {
-      id: "key" + this.maxID++,
-      done: false,
-      edit: false,
-      hidden: false,
+      id: this.setId(),
+      isDone: false,
+      isEdit: false,
+      isHidden: false,
       description: text,
       created: Date.now() - Math.ceil(1000 * 60 * 7 * Math.random())
     }
@@ -46,38 +44,31 @@ export default class App extends Component {
 
   onToggleDone = (id) => {
     this.setState( ({todoData}) => 
-      this.toggleProp(todoData, id, "done")
+      this.toggleProp(todoData, id, "isDone")
     )
   }
 
   onDelete = (id) => {
     this.setState( ({todoData}) => {
-      const idx = todoData.findIndex((el) => el.id === id);
       return {
-        todoData : [
-          ...todoData.slice(0, idx),
-          ...todoData.slice(idx + 1)
-        ]
+        todoData : todoData.filter( el => el.id !== id )
       }
     });
   }
 
   clearDone = () => {
     this.setState( ({todoData}) => {
-      const todoLeft = todoData.filter((el) => el.done === false);
       return {
-        todoData : todoLeft
+        todoData : todoData.filter((el) => el.isDone === false)
       }
     });
   }
 
   onEditKeyUp = (id, event) => {
-    //console.log('onEditKeyUp', id, event.key)
     if (event.key === "Enter") {
-      //console.log('onEditKeyUp', id);
       this.setState( ({todoData}) => {
         const idx = todoData.findIndex((el) => el.id === id);
-        const updateTodo =  { ...todoData[idx], description: event.target.value, edit: false};
+        const updateTodo =  { ...todoData[idx], description: event.target.value, isEdit: false};
         return {
           todoData : [
             ...todoData.slice(0, idx),
@@ -88,20 +79,23 @@ export default class App extends Component {
       });
     }
   }
+
   onEdit = (id, event) => {
     this.setState( ({todoData}) => 
-      this.toggleProp(todoData, id, "edit")
+      this.toggleProp(todoData, id, "isEdit")
     )
   }
 
   filterList = (filter, event) => {
-    //console.log('filter', filter);
     document.querySelector('.filters .selected').classList.remove('selected');
     event.target.classList.add('selected');
     this.setState( ({todoData}) => {
       return {
         todoData: todoData.map( (el) => {
-          return { ...el, hidden: (filter === "active")? el.done : (filter === "completed"? !el.done : false) };
+          let flagHidden = false;
+          if (filter === "active") flagHidden = el.isDone;
+          if (filter === "completed") flagHidden = !el.isDone;
+          return { ...el, isHidden: flagHidden };
         })
       }
     })

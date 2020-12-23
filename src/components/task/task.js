@@ -1,36 +1,41 @@
 import React, { Component } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import './task.css';
+import './Task.css';
 
 export default class Task extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            taskEditText: props.description
-        }
-    }
+    // constructor(props) {
+    //     super(props);
+    //     this.state = {
+    //         taskEditText: props.description
+    //     }
+    // }
 
-    changeText = (evt) => {
-        this.setState( {taskEditText: evt.target.value} )
+    changeText = (event) => {
+        this.setState( {taskEditText: event.target.value} )
     }
 
     componentDidUpdate() {
         //console.log('.');
     }
 
-    render() {
-        const {id, done, edit, hidden, description, created, onDelete, onToggleDone, onEditKeyUp, onEdit} = this.props;
+    setClassName = (isDone, isEdit, isHidden) => {
+        let classNames = "";
+        if (isDone) classNames = "completed";
+        if (isEdit) classNames = "editing";
+        if (isHidden) classNames += " hidden";
+        return classNames;
+    }
 
-        let classNames = done? "completed" : "";
-        classNames = edit? "editing" : classNames;
-        let editField = edit? (
-            <input type="text" className="edit" onChange={this.changeText} onKeyUp={(event) => onEditKeyUp(id, event)} value={this.state.taskEditText} tabIndex="1" />
+    render() {
+        const {id, isDone, isEdit, isHidden, description, created, onDelete, onToggleDone, onEditKeyUp, onEdit} = this.props;
+
+        let classNames = this.setClassName(isDone, isEdit, isHidden);
+        let editField = isEdit? (
+            <input type="text" className="edit" onChange={this.changeText} onKeyUp={(event) => onEditKeyUp(id, event)} value={description} tabIndex="1" />
         ) : null;
-        let checkedToggle = done? "checked" : "";
-        if (hidden) {
-            classNames += " hidden";
-        }
+        let checkedToggle = isDone? "checked" : "";
+        
 
         return (
             <li className={classNames}>

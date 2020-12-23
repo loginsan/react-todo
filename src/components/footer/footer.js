@@ -1,15 +1,14 @@
 import React from 'react';
-import TasksFilter from '../tasks-filter';
-import './footer.css';
+import TasksFilter from '../Tasks-filter';
+import './Footer.css';
 
-const Footer = (props) => {
-    const todoData = props.items;
-    const todoLeft = todoData.reduce((acc, todo) => todo.done? acc : acc + 1, 0);
+const Footer = ({items, filterList, clearDone}) => {
+    const todoLeft = items.reduce((acc, todo) => todo.isDone? acc : acc + 1, 0);
     return (
         <footer className="footer">
           <span className="todo-count">{todoLeft} items left</span>
-          <TasksFilter filterList={props.filterList} />
-          <button className="clear-completed" onClick={() => props.clearDone()}>Clear completed</button>
+          <TasksFilter filterList={filterList} />
+          <button className="clear-completed" onClick={clearDone}>Clear completed</button>
         </footer>
     );
 }
