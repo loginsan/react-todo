@@ -31,19 +31,15 @@ export default class App extends Component {
   }
 
   toggleProp = (propArr, id, name) => {
-    const idx = propArr.findIndex((el) => el.id === id);
-    const updateTodo =  { ...propArr[idx], [name]: !propArr[idx][name] };
     return {
-      todoData : [
-        ...propArr.slice(0, idx),
-        updateTodo,
-        ...propArr.slice(idx + 1)
-      ]
+      todoData: propArr.map( el => {
+        return (el.id === id)? { ...el, [name]: !el[name]} : el
+      })
     }
   }
 
   onToggleDone = (id) => {
-    this.setState( ({todoData}) => 
+    this.setState( ({todoData}) =>
       this.toggleProp(todoData, id, "isDone")
     )
   }
@@ -66,24 +62,24 @@ export default class App extends Component {
 
   onEditKeyUp = (id, event) => {
     if (event.key === "Enter") {
-      this.setState( ({todoData}) => {
-        const idx = todoData.findIndex((el) => el.id === id);
-        const updateTodo =  { ...todoData[idx], description: event.target.value, isEdit: false};
-        return {
-          todoData : [
-            ...todoData.slice(0, idx),
-            updateTodo,
-            ...todoData.slice(idx + 1)
-          ]
-        }
-      });
+      this.onEdit(id, event);
     }
   }
 
   onEdit = (id, event) => {
-    this.setState( ({todoData}) => 
+    this.setState( ({todoData}) =>
       this.toggleProp(todoData, id, "isEdit")
     )
+  }
+
+  changeText = (id, event) => {
+    this.setState( ({todoData}) => {
+      return {
+        todoData: todoData.map( todo => {
+          return (todo.id === id)? { ...todo, description: event.target.value} : todo
+        })
+      }
+    })
   }
 
   filterList = (filter, event) => {
@@ -91,7 +87,7 @@ export default class App extends Component {
     event.target.classList.add('selected');
     this.setState( ({todoData}) => {
       return {
-        todoData: todoData.map( (el) => {
+        todoData: todoData.map( el => {
           let flagHidden = false;
           if (filter === "active") flagHidden = el.isDone;
           if (filter === "completed") flagHidden = !el.isDone;
@@ -107,7 +103,7 @@ export default class App extends Component {
         const todoAppend = this.createTodoObj(event.target.value);
         event.target.value = "";
         return {
-          todoData : [ ...todoData, todoAppend ]
+          todoData: [ ...todoData, todoAppend ]
         }
       });
     }
@@ -122,7 +118,7 @@ export default class App extends Component {
                 <NewTaskForm label="What needs to be done?" autofocus={true} addTodo={this.addTodo} tabIndex="1" />
             </header>
             <section className="main">
-                <TaskList items={todoData} onDelete={this.onDelete} onToggleDone={this.onToggleDone} onEditKeyUp={this.onEditKeyUp} onEdit={this.onEdit} />
+                <TaskList items={todoData} onDelete={this.onDelete} onToggleDone={this.onToggleDone} onEditKeyUp={this.onEditKeyUp} onEdit={this.onEdit} changeText={this.changeText} />
                 <Footer items={todoData} clearDone={this.clearDone} filterList={this.filterList} />
             </section>
         </section>
