@@ -1,39 +1,39 @@
 import React, {Component} from 'react';
-
 import NewTaskForm from '../New-task-form';
-import Footer from '../Footer';
 import TaskList from '../Task-list';
+import Footer from '../Footer';
+import C from '../../constant';
 
 export default class App extends Component {
 
   state = {
     todoData : [
-        this.createTodoObj("Completed task"),
-        this.createTodoObj("Editing task"),
-        this.createTodoObj("Active task"),
-        this.createTodoObj("Some test todo")
+        this.createTodoObj("Completed task", true),
+        this.createTodoObj("Editing task", true),
+        this.createTodoObj("Active task", true),
+        this.createTodoObj("Some test todo", true)
     ]
   };
 
   setId() {
-    return "key" + (Date.now() - Math.ceil(1000 * 60 * 7 * Math.random()))
+    return "key" + (Date.now() - Math.ceil(1000 * Math.random()))
   }
 
-  createTodoObj(text) {
+  createTodoObj(text, demo = false) {
     return {
       id: this.setId(),
       isDone: false,
       isEdit: false,
       isHidden: false,
       description: text,
-      created: Date.now() - Math.ceil(1000 * 60 * 7 * Math.random())
+      created: demo? Date.now() - Math.ceil(1000 * 60 * 7 * Math.random()) : Date.now()
     }
   }
 
   toggleProp = (propArr, id, name) => {
     return {
       todoData: propArr.map( el => {
-        return (el.id === id)? { ...el, [name]: !el[name]} : el
+        return (el.id === id)? { ...el, [name]: !el[name] } : el
       })
     }
   }
@@ -44,32 +44,16 @@ export default class App extends Component {
     )
   }
 
-  onDelete = (id) => {
-    this.setState( ({todoData}) => {
-      return {
-        todoData : todoData.filter( el => el.id !== id )
-      }
-    });
-  }
-
-  clearDone = () => {
-    this.setState( ({todoData}) => {
-      return {
-        todoData : todoData.filter((el) => el.isDone === false)
-      }
-    });
+  onEdit = (id, event) => {
+    this.setState( ({todoData}) =>
+      this.toggleProp(todoData, id, "isEdit")
+    )
   }
 
   onEditKeyUp = (id, event) => {
     if (event.key === "Enter") {
       this.onEdit(id, event);
     }
-  }
-
-  onEdit = (id, event) => {
-    this.setState( ({todoData}) =>
-      this.toggleProp(todoData, id, "isEdit")
-    )
   }
 
   changeText = (id, event) => {
@@ -82,15 +66,31 @@ export default class App extends Component {
     })
   }
 
-  filterList = (filter, event) => {
+  onDelete = (id) => {
+    this.setState( ({todoData}) => {
+      return {
+        todoData: todoData.filter( el => el.id !== id )
+      }
+    });
+  }
+
+  clearDone = () => {
+    this.setState( ({todoData}) => {
+      return {
+        todoData: todoData.filter( el => el.isDone === false )
+      }
+    });
+  }
+
+  filterList = (event, filter = C.ALL) => {
     document.querySelector('.filters .selected').classList.remove('selected');
     event.target.classList.add('selected');
     this.setState( ({todoData}) => {
       return {
         todoData: todoData.map( el => {
           let flagHidden = false;
-          if (filter === "active") flagHidden = el.isDone;
-          if (filter === "completed") flagHidden = !el.isDone;
+          if (filter === C.ACTIVE_CN) flagHidden = el.isDone;
+          if (filter === C.DONE_CN) flagHidden = !el.isDone;
           return { ...el, isHidden: flagHidden };
         })
       }
@@ -112,16 +112,19 @@ export default class App extends Component {
   render() {
     const {todoData} = this.state;
     return (
-        <section className="todoapp">
-            <header className="header">
-                <h1>todos</h1>
-                <NewTaskForm label="What needs to be done?" autofocus={true} addTodo={this.addTodo} tabIndex="1" />
-            </header>
-            <section className="main">
-                <TaskList items={todoData} onDelete={this.onDelete} onToggleDone={this.onToggleDone} onEditKeyUp={this.onEditKeyUp} onEdit={this.onEdit} changeText={this.changeText} />
-                <Footer items={todoData} clearDone={this.clearDone} filterList={this.filterList} />
-            </section>
+      <section className="todoapp">
+        <header className="header">
+          <h1>todos</h1>
+          <NewTaskForm label="What needs to be done?" addTodo={this.addTodo} />
+        </header>
+        <section className="main">
+          <TaskList items={todoData} 
+            onDelete={this.onDelete} onToggleDone={this.onToggleDone} 
+            onEdit={this.onEdit} onEditKeyUp={this.onEditKeyUp} changeText={this.changeText} 
+          />
+          <Footer items={todoData} clearDone={this.clearDone} filterList={this.filterList} />
         </section>
+      </section>
     )
   };
 
