@@ -6,6 +6,20 @@ import C from '../../constant';
 
 export default class Task extends Component {
 
+  static defaultProps = {
+    id: 'key' + Date.now(),
+    isDone: false,
+    isEdit: false,
+    isHidden: false,
+    description: 'Just do it',
+    created: Date.now(),
+    onDelete: () => {},
+    onToggleDone: () => {},
+    onEditKeyUp: () => {},
+    onEdit: () => {},
+    changeText: () => {}
+  }
+
   setClassName = (isDone, isEdit, isHidden) => {
     let classNames = "";
     if (isDone) classNames = C.DONE_CN;

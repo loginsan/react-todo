@@ -5,6 +5,15 @@ import Task from '../Task';
 
 export default class TaskList extends Component {
 
+  static defaultProps = {
+    items: [], 
+    onDelete: () => {}, 
+    onToggleDone: () => {}, 
+    onEditKeyUp: () => {}, 
+    onEdit: () => {}, 
+    changeText: () => {}
+  };
+
   render() {
     const {items, onDelete, onToggleDone, onEditKeyUp, onEdit, changeText} = this.props;
     return (

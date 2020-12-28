@@ -15,7 +15,11 @@ const TasksFilter = ({filterList}) => {
         <button onClick={(event) => filterList(event, C.DONE_CN)}>{C.DONE}</button>
       </li>
     </ul>
-  );
+  )
+}
+
+TasksFilter.defaultProps = {
+  filterList: () => {}
 }
 
 export default TasksFilter;

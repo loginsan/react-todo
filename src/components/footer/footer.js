@@ -10,7 +10,13 @@ const Footer = ({items, filterList, clearDone}) => {
       <TasksFilter filterList={filterList} />
       <button className="clear-completed" onClick={clearDone}>Clear completed</button>
     </footer>
-  );
+  )
+}
+
+Footer.defaultProps = {
+  items: [],
+  filterList: () => {},
+  clearDone: () => {}
 }
 
 export default Footer;
