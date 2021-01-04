@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './New-task-form.css';
 
 const NewTaskForm = ( {label, addTodo, autofocus} ) => {
@@ -9,8 +10,13 @@ const NewTaskForm = ( {label, addTodo, autofocus} ) => {
 
 NewTaskForm.defaultProps = {
   label: 'What to do?',
-  addTodo: () => {},
   autofocus: true
+};
+
+NewTaskForm.propTypes = {
+  label: PropTypes.string,
+  addTodo: PropTypes.func.isRequired,
+  autofocus: PropTypes.bool
 };
 
 export default NewTaskForm;

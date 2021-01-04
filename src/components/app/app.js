@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import NewTaskForm from '../New-task-form';
-import TaskList from '../Task-list';
-import Footer from '../Footer';
+import Header from '../Header';
+import Main from '../Main';
 import C from '../../constant';
 
 export default class App extends Component {
@@ -13,7 +12,7 @@ export default class App extends Component {
         this.createTodoObj("Active task", true),
         this.createTodoObj("Some test todo", true)
     ]
-  };
+  }
 
   setId() {
     return "key" + (Date.now() - Math.ceil(1000 * Math.random()))
@@ -51,9 +50,8 @@ export default class App extends Component {
   }
 
   onEditKeyUp = (id, event) => {
-    if (event.key === "Enter") {
-      this.onEdit(id, event);
-    }
+    event.preventDefault();
+    this.onEdit(id, event);
   }
 
   changeText = (id, event) => {
@@ -98,34 +96,40 @@ export default class App extends Component {
   }
 
   addTodo = (event) => {
-    if (event.key === "Enter" && event.target.value !== "") {
+    const value = event.target.value;
+    if (event.key === "Enter" && value !== "") {
       this.setState( ({todoData}) => {
-        const todoAppend = this.createTodoObj(event.target.value);
         event.target.value = "";
         return {
-          todoData: [ ...todoData, todoAppend ]
+          todoData: [ ...todoData, this.createTodoObj(value) ]
         }
       });
     }
   }
 
+  listHandlers = {
+    'delete': this.onDelete, 
+    'check': this.onToggleDone, 
+    'edit': this.onEdit,
+    'submit': this.onEditKeyUp,
+    'change': this.changeText
+  }
+
+  footerHandlers = {
+    'filter': this.filterList, 
+    'clear': this.clearDone
+  }
+
   render() {
-    const {todoData} = this.state;
     return (
       <section className="todoapp">
-        <header className="header">
-          <h1>todos</h1>
-          <NewTaskForm label="What needs to be done?" addTodo={this.addTodo} />
-        </header>
-        <section className="main">
-          <TaskList items={todoData} 
-            onDelete={this.onDelete} onToggleDone={this.onToggleDone} 
-            onEdit={this.onEdit} onEditKeyUp={this.onEditKeyUp} changeText={this.changeText} 
-          />
-          <Footer items={todoData} clearDone={this.clearDone} filterList={this.filterList} />
-        </section>
+        <Header addTodo={this.addTodo} />
+        <Main items={this.state.todoData} 
+          listHandlers={this.listHandlers}
+          footerHandlers={this.footerHandlers}
+        />
       </section>
     )
-  };
+  }
 
 }
